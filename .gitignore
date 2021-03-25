@@ -1,0 +1,6 @@
+# Ignore all
+*
+
+# Except Bash Files and !.gitignores
+!*.sh
+!.gitignore
