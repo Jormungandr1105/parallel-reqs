@@ -4,3 +4,10 @@
 # Except Bash Files and !.gitignores
 !*.sh
 !.gitignore
+
+# Also Folders
+!hydra-download
+!hydra-install
+!mpich-download
+!mpich-install
+!temp
