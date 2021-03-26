@@ -6,8 +6,7 @@
 !.gitignore
 
 # Also Folders
-!hydra-download
-!hydra-install
-!mpich-download
-!mpich-install
-!temp
+!src
+
+# And an empty hosts file
+!hosts.txt
