@@ -12,4 +12,5 @@ export lib_name="mpich-$mpich_version"
 #Install folder name
 export install_folder="mpich-install"
 
+# Put MPICH commands into the PATH for ease of use
 export PATH=$pathname/$install_folder/bin:$PATH

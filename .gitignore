@@ -1,8 +1,12 @@
 # Ignore all
 *
 
-# Except Bash Files and !.gitignores
+# Except Necessary
 !*.sh
+!*.cpp
+!*.h
+!*.py
+!*.ino
 !.gitignore
 
 # Also Folders
