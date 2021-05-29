@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # version number
-export mpich_version="3.4.1" 
+export mpich_version="3.4.2" 
 
 # current path to project
 export pathname=$(cd .. && pwd) 
