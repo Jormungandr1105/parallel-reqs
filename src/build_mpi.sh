@@ -59,7 +59,10 @@ then
 	--disable-fortran 2>&1 | tee c.txt
 	make 2>&1 | tee m.txt
 	make install 2>&1 | tee mi.txt
-	echo "MPICH INSTALLED"
+fi
+if [ -d $install_folder/bin ]
+then
+	echo "MPICH INSTALLED SUCCESSFULLY"
 else
-	echo "MPICH INSTALLED"
+	echo "MPICH INSTALLATION FAILED"
 fi
