@@ -60,6 +60,7 @@ then
 	make 2>&1 | tee m.txt
 	make install 2>&1 | tee mi.txt
 fi
+cd $pathname
 if [ -d $install_folder/bin ]
 then
 	echo "MPICH INSTALLED SUCCESSFULLY"

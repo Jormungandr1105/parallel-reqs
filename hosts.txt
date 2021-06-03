@@ -1,3 +1,7 @@
-hostname1
-hostname2
-hostname3
+node00 slots=8
+node01 slots=8
+node02 slots=8
+node03 slots=8
+node04 slots=8
+node05 slots=8
+node06 slots=8
