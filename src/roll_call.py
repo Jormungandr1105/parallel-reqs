@@ -7,7 +7,7 @@ def run():
 	data = rank
 	data = MPI.COMM_WORLD.gather(data, root=0)
 	if rank == 0:
-		print()
+		print("Performing Roll Call:")
 		for i in range(size):
 			if data[i] == i:
 				print("Process {0} of {1}: Online".format(i+1,size))
