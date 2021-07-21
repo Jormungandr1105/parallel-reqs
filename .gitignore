@@ -8,9 +8,13 @@
 !*.py
 !*.ino
 !.gitignore
+!*.js
+!*.txt
 
 # Also Folders
 !src
+!src/web-app
+!src/arduino
 
 # And an empty hosts file
 !hosts.txt

@@ -37,7 +37,7 @@ def execute_orders(order):
 	if order_key == "POWER":
 		vals = []
 		for x in order_value:
-			vals += int(x)
+			vals.append(int(x))
 		controller.power_control(vals)
 	elif order_key == "LED":
 		if len(order_value) == 6:
