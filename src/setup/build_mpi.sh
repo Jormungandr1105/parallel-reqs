@@ -31,7 +31,7 @@ function Create_File() {
 ################################################################################
 # MAIN
 ################################################################################
-cd ..
+cd ../..
 # Make the folders, if they dont exist
 Create_Folder $install_folder
 Create_Folder temp

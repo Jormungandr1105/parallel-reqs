@@ -1,20 +1,13 @@
-# Ignore all
-*
+# build help
+temp
 
-# Except Necessary
-!*.sh
-!*.cpp
-!*.h
-!*.py
-!*.ino
-!.gitignore
-!*.js
-!*.txt
+# Code
+.vscode
+.fuse*
 
-# Also Folders
-!src
-!src/web-app
-!src/arduino
+# Unimportant
+__pycache__
 
-# And an empty hosts file
-!hosts.txt
+# Created when run
+mpich-download
+mpich-install
