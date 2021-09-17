@@ -10,7 +10,7 @@ def boot_system():
 
 
 def await_orders():
-	for _ in range(10): # Temp while testing, will become while(True):
+	for _ in range(100): # Temp while testing, will become while(True):
 		first_file = ""
 		first_num = 1000000000000
 		directory = os.listdir(command_path)
@@ -50,9 +50,9 @@ def execute_orders(order):
 		pass
 		
 
-
 command_path = "../commands"
 controller = None
+
 
 if __name__ == '__main__':
 	boot_system()

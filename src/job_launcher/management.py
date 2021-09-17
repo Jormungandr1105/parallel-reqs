@@ -8,9 +8,9 @@ class Management():
 		power = ""
 		for x in self.addresses:
 			if x == "1":
-				power += 1
+				power += "1"
 			else:
-				power += 0
+				power += "0"
 		
 	def power_off(self):
 		power = ""
