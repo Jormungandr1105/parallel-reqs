@@ -1,6 +1,7 @@
 import sys
 import os
 import time
+import math
 import threading
 import subprocess
 from management import Management
@@ -20,28 +21,35 @@ def launch_job():
 	# Clean Up
 	t_tot = time.time() - start_time
 	if (t_tot >= max_time):
-		print("PROCESS KILLED: TIME LIMIT EXCEEDED\nTOTAL TIME PASSED: {}".format(t_tot))
+		print("PROCESS KILLED: TIME LIMIT EXCEEDED\nTOTAL TIME PASSED: {}".format(math.floor(t_tot)))
 		Manager.timeout()
 	else:
-		print("TOTAL TIME PASSED: {0}".format(t_tot))
+		print("TOTAL TIME PASSED: {0}".format(math.floor(t_tot)))
 
 
 def run_job():
+	global job
 	exec_file = values[1]
 	execute = "mpiexec -np {0} --hostfile {1} ".format(values[2], values[3])
 	try:
 		ext_begin = exec_file.rfind(".")
 		if exec_file[ext_begin:] == ".py":
-			execute += "python3 -m {0}".format(values[1])
+			execute += "python3 {0}".format(values[1])
 		else:
 			execute += "{0}".format(values[1])
 	except ValueError:
 		execute += "{0}".format(values[1])
 	finally:
-		status = subprocess.run(execute, capture_output=True)
-	if status.returncode == 0:
+		args = execute.split(" ")
+		#job = subprocess.Popen(args, stdout=subprocess.PIPE, bufsize=1)
+		job = subprocess.run(args, capture_output=True)
+		save_file("out.txt", job.stdout.decode("utf-8"))
+		save_file("error.log", job.stderr.decode("utf-8"))
+		#while job.poll() != None:
+
+	if job.returncode == 0:
 		print("PROCESS COMPLETED SUCCESSFULLY")
-	elif status.returncode == 1:
+	elif job.returncode == 1:
 		print("SYSTEM ENCOUNTERED AN ERROR")
 	return
 
@@ -112,9 +120,16 @@ def read_file(filename):
 	return text
 
 
+def save_file(filename, text):
+	# Easy Write
+	f = open(filename, "w+")
+	f.write(text)
+	f.close()
+
+
 Manager = None
-keys = ["JOB_NAME", "JOB_FILE", "NUM_NODES", "HOST_LIST", "MAX_TIME", "COUNT_TIME"]
-values = ["DEFAULT_JOB", None, 0, os.curdir+"machinefile", "000:00:00:00", False]
+keys = ["JOB_NAME", "JOB_FILE", "NUM_NODES", "HOST_LIST", "MAX_TIME", "COUNT_TIME", "SAVE_FILE"]
+values = ["DEFAULT_JOB", None, 0, os.curdir+"machinefile", "000:00:00:00", False, "out.txt"]
 
 
 if __name__ == '__main__':

@@ -64,6 +64,15 @@ cd $pathname
 if [ -d $install_folder/bin ]
 then
 	echo "MPICH INSTALLED SUCCESSFULLY"
+	whichreturn="$(which mpirun)" > /dev/null
+	should_be="$pathname/$install_folder/bin/mpirun"
+	if [ "$whichreturn" == "$should_be" ]
+	then
+		echo "MPICH ON PATH"
+	else
+		echo -e "# Use MPICH for Parallel Programming\nexport PATH=$pathname/$install_folder/bin:\$PATH" >> $HOME/.bashrc
+		echo "MPICH ADDED TO PATH"
+	fi
 else
 	echo "MPICH INSTALLATION FAILED"
 fi

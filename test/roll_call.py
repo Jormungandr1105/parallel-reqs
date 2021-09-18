@@ -1,4 +1,5 @@
 from mpi4py import MPI
+import time
 
 
 def run():
@@ -13,6 +14,7 @@ def run():
 				print("Process {0} of {1}: Online".format(i+1,size))
 			else:
 				print("Process {0} of {1}: Unresponsive".format(i+1, size))
+			time.sleep(2)
 
 
 
