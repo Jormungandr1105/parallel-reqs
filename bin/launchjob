@@ -1,0 +1,3 @@
+#!/bin/bash
+
+python3 ~/Code/parallel-reqs/src/job_launcher/launch_job.py "$1"

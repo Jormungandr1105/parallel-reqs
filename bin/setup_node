@@ -1,0 +1,5 @@
+#!/bin/bash
+## SETS UP PARALLEL PROCESSING ON A SINGLE NODE
+
+cd ~/Code/parallel-reqs/src/setup
+./build_mpi.sh

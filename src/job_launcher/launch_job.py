@@ -8,7 +8,8 @@ from management import Management
 
 
 def launch_job():
-	max_time = get_seconds(values[4])
+	global args
+	max_time = get_seconds(args["MAX_TIME"])
 	# Create thread
 	t_main = threading.Thread(target=run_job, daemon=True)
 	# Hit the clock
@@ -29,20 +30,21 @@ def launch_job():
 
 def run_job():
 	global job
-	exec_file = values[1]
-	execute = "mpiexec -np {0} --hostfile {1} ".format(values[2], values[3])
+	global args
+	exec_file = args["JOB_FILE"]
+	execute = "mpiexec -np {0} --hostfile {1} ".format(args["NUM_NODES"], args["HOST_LIST"])
 	try:
 		ext_begin = exec_file.rfind(".")
 		if exec_file[ext_begin:] == ".py":
-			execute += "python3 {0}".format(values[1])
+			execute += "python3 {0}".format(exec_file)
 		else:
-			execute += "{0}".format(values[1])
+			execute += "{0}".format(exec_file)
 	except ValueError:
-		execute += "{0}".format(values[1])
+		execute += "{0}".format(exec_file)
 	finally:
-		args = execute.split(" ")
+		arguments = execute.split(" ")
 		#job = subprocess.Popen(args, stdout=subprocess.PIPE, bufsize=1)
-		job = subprocess.run(args, capture_output=True)
+		job = subprocess.run(arguments, capture_output=True)
 		save_file("out.txt", job.stdout.decode("utf-8"))
 		save_file("error.log", job.stderr.decode("utf-8"))
 		#while job.poll() != None:
@@ -67,7 +69,7 @@ def boot_system():
 def get_addresses():
 	# Figures out which nodes are to be used
 	node_nums = []
-	text = read_file(values[3])
+	text = read_file(args["HOST_LIST"])
 	nodes = text.split("\n")
 	for node in nodes:
 		node_number = node.split(":")[0].strip("node")
@@ -103,12 +105,10 @@ def load_config(filename):
 
 def set_option(option_key, option_value):
 	# Figures out what the configs are trying to set, and then does it
-	global keys
-	global values
-	for i in range(len(keys)):
-		if option_key == keys[i]:
-			values[i] = option_value
-			return
+	global args
+
+	if option_key in args:
+		args[option_key] = option_value
 	return
 
 
@@ -129,11 +129,19 @@ def save_file(filename, text):
 
 Manager = None
 keys = ["JOB_NAME", "JOB_FILE", "NUM_NODES", "HOST_LIST", "MAX_TIME", "COUNT_TIME", "SAVE_FILE"]
-values = ["DEFAULT_JOB", None, 0, os.curdir+"machinefile", "000:00:00:00", False, "out.txt"]
-
+values = ["DEFAULT_JOB", None, 0, os.curdir+"/machinefile", "000:00:00:00", False, "out.txt"]
+args = {
+	"JOB_NAME": "DEFAULT JOB",
+	"JOB_FILE": None,
+	"NUM_NODES": 0,
+	"HOST_LIST": os.curdir+"/machinefile",
+	"MAX_TIME": "000:00:00:00",
+	"SAVE_FILE": "out.txt"
+}
 
 if __name__ == '__main__':
 	assert(len(sys.argv) == 2)
 	load_config(sys.argv[1])
 	boot_system()
+	print(args)
 	launch_job()
