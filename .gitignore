@@ -11,3 +11,7 @@ __pycache__
 # Created when run
 mpich-download
 mpich-install
+
+# Web Stuff
+src/web-app/frontend/node_modules
+src/web-app/backend/node_modules

@@ -1,35 +1,35 @@
 {
   "progress": [
     {
-      "job": "Job_01: LEVIATHAN",
-      "percent": 100
+      "job": "job01",
+      "percent": 0
     },
     {
-      "job": "Job_02: PRIMES",
-      "percent": 100
+      "job": "job02",
+      "percent": 0
     },
     {
-      "job": "Job_03: PROJECT_DOGE",
-      "percent": 100
+      "job": "job03",
+      "percent": 0
     }
   ],
-  "temperature": 24,
+  "temperature": 23,
   "nodes": [
     {
       "name": "node00",
-      "cores": 0
+      "cores": 2
     },
     {
       "name": "node01",
-      "cores": 0
+      "cores": 1
     },
     {
       "name": "node02",
-      "cores": 0
+      "cores": 1
     },
     {
       "name": "node03",
-      "cores": 0
+      "cores": 1
     },
     {
       "name": "node04",

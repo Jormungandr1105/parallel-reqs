@@ -1,0 +1,8 @@
+#!/bin/bash
+# Launches the Cluster's monitoring site
+
+cd ~/Code/parallel-reqs/src/web-app
+
+cd backend && node server.js &
+cd frontend && npm start &
+wait
