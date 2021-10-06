@@ -3,6 +3,6 @@
 
 cd ~/Code/parallel-reqs/src/web-app
 
-cd backend && node server.js &
+cd backend && node index.js &
 cd frontend && npm start &
 wait
