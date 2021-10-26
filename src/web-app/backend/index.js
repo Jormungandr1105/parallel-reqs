@@ -15,9 +15,9 @@ app.use(function(req, res, next) {
 });
 
 app.get("/data", function(req, res) {
-	Data.readData(atime, aData, function(err, data, new_atime) {
+	Data.readData(atime, aData, function(err, data, new_atime, updated) {
 		res.send(data);
 		atime = new_atime;
-		aData = data;
+		if (updated == true) {aData = data;}
 	});
 });

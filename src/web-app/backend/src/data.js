@@ -13,12 +13,12 @@ function readData(atime, Data, callback) {
 		if (stats.mtimeMs > atime) {
 			fs.readFile(file, function(err, data) {
 				Data = JSON.parse(data);
-				console.log("New Data Accessed");
-				callback(null, Data, Date.now());
+				//console.log("New Data Accessed");
+				callback(null, Data, Date.now(), true);
 			});
 		} else {
-			console.log("Old Data Accessed");
-			callback(null, Data, atime);
+			//console.log("Old Data Accessed");
+			callback(null, Data, atime, false);
 		}
 	});
 	

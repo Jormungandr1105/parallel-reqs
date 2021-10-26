@@ -1,4 +1,5 @@
-import React, {Component, useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
+
 import axios from 'axios';
 import "./pages.css";
 
@@ -26,11 +27,25 @@ function Status() {
   }
 
 
+	function Job_Status(props) {
+		//console.log(props);
+		//console.log(index);
+		const data = props.children[0];
+		const index = props.children[1];
+		return(
+			<div className="job_info" key={index}>
+				<div>{data.job +" => "+ data.percent + "%"}</div>
+				
+			</div>
+		);
+	}
+
+
 	return (
 		<div className="window" >
 			<h1 className="Window-header">Status Window</h1>
 			<p className="Progress-Title">PROGRESS</p>
-			{progress.map(progress => <div>{progress.job +" => "+ progress.percent + "%"}</div>)}
+			{progress.map((progress,index) => <Job_Status>{progress}{index}</Job_Status>)}
 			<p className="Temperature-Value">{temperature + "C"}</p>
 			<p className="Nodes-Title">NODES</p>
 			{nodes.map(nodes => <div>{nodes.name +" => "+ nodes.cores}</div>)}
@@ -39,29 +54,3 @@ function Status() {
 }
 
 export default Status;
-
-/*
-class Status extends Component {
-	state = {
-		temperature: 0
-	};
-
-	componentDidMount() {
-
-	}
-
-	componentWillUnmount() {
-
-	}
-
-	callBackendAPI = async() => {
-		const response = await fetch('/data');
-		const body = await response.json();
-
-		if (response.status !== 200) {
-			throw Error(body.message);
-		}
-		return body;
-	}
-}
-*/

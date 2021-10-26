@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "POWER:0000\nCOLOR:6" > ../commands/1.cmnd
