@@ -1,2 +1,3 @@
 #!/bin/bash
-echo "POWER:0000\nCOLOR:6" > ../commands/1.cmnd
+echo -e "POWER:0000" > ../commands/1.cmnd
+echo -e "LED:6" > ../commands/2.cmnd
