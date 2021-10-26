@@ -10,12 +10,12 @@ def boot_system():
 
 
 def await_orders():
-	for _ in range(100): # Temp while testing, will become while(True):
+	while(True): # Temp while testing, will become while(True):
 		first_file = ""
 		first_num = 1000000000000
 		directory = os.listdir(command_path)
 		for file in directory:
-			if file != "template.cmnd":
+			if file != "template.cmnd" and file.split(".")[0] == "cmnd":
 				file_no = int(file.split(".")[0])
 				if file_no < first_num:
 					first_num = file_no
@@ -26,7 +26,7 @@ def await_orders():
 			execute_orders(text)
 			f.close()
 			os.remove(command_path+"/"+file)
-		time.sleep(2)
+		time.sleep(1)
 
 
 def execute_orders(order):
