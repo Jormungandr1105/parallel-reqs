@@ -1,3 +1,3 @@
 #!/bin/bash
-echo -e "POWER:0000" > ../commands/1.cmnd
-echo -e "LED:6" > ../commands/2.cmnd
+echo -e "POWER:0000" > /home/$USER/parallel-reqs/commands/1.cmnd
+echo -e "LED:6" > /home/$USER/parallel-reqs/commands/2.cmnd

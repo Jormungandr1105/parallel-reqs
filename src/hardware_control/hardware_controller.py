@@ -15,7 +15,7 @@ def await_orders():
 		first_num = 1000000000000
 		directory = os.listdir(command_path)
 		for file in directory:
-			if file != "template.cmnd" and file.split(".")[0] == "cmnd":
+			if file != "template.cmnd" and file.split(".")[1] == "cmnd":
 				file_no = int(file.split(".")[0])
 				if file_no < first_num:
 					first_num = file_no
@@ -45,7 +45,7 @@ def execute_orders(order):
 			controller.change_color_hex(order_value)
 		else:
 			# send color from list
-			controller.change_color(str(order_value))
+			controller.change_color(int(order_value))
 	elif order_key == "FANS":
 		pass
 		
