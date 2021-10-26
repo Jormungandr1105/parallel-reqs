@@ -1,3 +1,4 @@
 #!/bin/bash
-echo -e "POWER:0000" > /home/$USER/parallel-reqs/commands/1.cmnd
-echo -e "LED:6" > /home/$USER/parallel-reqs/commands/2.cmnd
+source env.sh
+echo -e "POWER:0000" > $COMMANDS/1.cmnd
+echo -e "LED:6" > $COMMANDS/2.cmnd

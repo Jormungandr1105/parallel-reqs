@@ -23,6 +23,7 @@ def await_orders():
 		if first_file != "":
 			f = open(command_path+"/"+file)
 			text = f.read()
+			#print(text)
 			execute_orders(text)
 			f.close()
 			os.remove(command_path+"/"+file)

@@ -1,3 +1,4 @@
 #!/bin/bash
-echo -e "POWER:1111" > /home/$USER/parallel-reqs/commands/1.cmnd
-echo -e "COLOR:0" > /home/$USER/parallel-reqs/commands/2.cmnd
+source env.sh
+echo -e "POWER:1111" > $COMMANDS/1.cmnd
+echo -e "COLOR:0" > $COMMANDS/2.cmnd

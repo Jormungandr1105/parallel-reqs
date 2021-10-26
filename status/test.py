@@ -34,7 +34,6 @@ def tick(n, n_max):
 		j_object["nodes"][3]["cores"] += 1
 		j_object["progress"][0]["job"] = "Job_01: LEVIATHAN"
 	if n == max1:
-		print("FINISHED JOB_01")
 		j_object["nodes"][0]["cores"] -= 2
 		j_object["nodes"][1]["cores"] -= 1
 		j_object["nodes"][2]["cores"] -= 1

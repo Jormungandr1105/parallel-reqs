@@ -1,5 +1,6 @@
 #!/bin/bash
 ## SETS UP PARALLEL PROCESSING ON MANY NODES
+source env.sh
 
-cd ~/Code/parallel-reqs/src/setup
+cd $REQS_LOC/src/setup
 ./setup_all_nodes.sh "$1"
