@@ -64,9 +64,9 @@ cd $pathname
 if [ -d $install_folder/bin ]
 then
 	echo "MPICH INSTALLED SUCCESSFULLY"
-	whichreturn="$(which mpirun)" > /dev/null
-	should_be="$pathname/$install_folder/bin/mpirun"
-	if [ "$whichreturn" == "$should_be" ]
+	cur_path="$(echo $PATH)"
+	should_have="$pathname/$install_folder/bin"
+	if [[ "$cur_path" =~ "$should_have" ]]
 	then
 		echo "MPICH ON PATH"
 	else
