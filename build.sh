@@ -3,10 +3,10 @@
 # within this repository
 
 echo -e "REQS_LOC=$PWD\nCOMMANDS=$PWD/commands\nHARDWARE=$PWD/src/hardware_control" > bin/env.sh
-echo -e "PATH CREATED"
-SYSTEMBOOT="$(which boot_system)" > /dev/null
-EXPECTED_RESP="$PWD/bin/boot_system"
-if [ "$SYSTEMBOOT" == "$EXPECTED_RESP" ] 
+echo -e "PROGRAM PATHS CREATED"
+SYSTEMBOOT="$(echo $PATH)"
+EXPECTED_RESP="$PWD/bin"
+if [[ "$SYSTEMBOOT" =~ "$EXPECTED_RESP" ]] 
 	then
 	echo -e "Parallel-Reqs/bin already on PATH:\n\tIf you have moved the folder, please remove */parallel-reqs/bin from your .bashrc file"
 else

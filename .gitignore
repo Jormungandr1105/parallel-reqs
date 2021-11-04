@@ -21,3 +21,6 @@ src/web-app/backend/node_modules
 
 # Commands
 *.cmnd
+
+# Environment variables
+*/env.sh
