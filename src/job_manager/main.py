@@ -21,15 +21,20 @@ import time
 import math
 import threading
 import subprocess
-from job import Job
+from job_manager.job import Job
+from job_manager.queue import Queue
 
 
-def run():
+
+def main_loop():
+	current_queue = Queue()
+	past_queue = Queue()
+	
 	while True:
-		check_pipe() # Check for incoming
+		check_pipe(current_queue, past_queue) # Check for incoming
 
 
-def check_pipe():
+def check_pipe(current_queue, past_queue):
 	# Get data
 	in_pipe = os.open(man_in, os.O_RDONLY)
 	in_pipe = os.fdopen(in_pipe)
@@ -43,21 +48,20 @@ def check_pipe():
 	args = info[1].split("\n")
 	data = info[2]
 	print("Hash: {0}\nCommand: {1}".format(h_val,command))
-	check_command(h_val,command,args,data)
+	check_command(h_val,command,args,data,current_queue,past_queue)
 
-def check_command(h_val, command, args, data):
+
+def check_command(h_val, command, args, data, current_queue, past_queue):
 	# Hella if statements
 	if command == "show_queue":
-		pass
+		data = get_queue(current_queue,args)
+		send(h_val, data)
 	elif command == "add_job":
-		pass
+		data = add_job()
 	elif command == "cluster_info":
-		if args[0] == "quick":
-			pass
-		elif args[0] == "detailed":
-			pass
+		pass
 	elif command == "incorrect_recipient":
-		send(h_val,  data)
+		send(h_val, data)
 	else:
 		pass
 
@@ -74,12 +78,20 @@ def get_status(h_val, args, data):
 	pass
 
 
-jobs = []
-nodes = []
-temperatures = []
-past_jobs = []
+def get_queue(current_queue,args):
+	data = ""
+	jobs = current_queue.get_jobs()
+	for job in jobs:
+		data += "{}\n".format(job.get_data(args[0]))
+	return data
+
+
+def add_job(h_val,data,current_queue):
+	pass
+
+
 man_in = "../../communications/man_in"
 man_out = "../../communications/man_out"
 
 if __name__ == "__main__":
-	run()
+	main_loop()
