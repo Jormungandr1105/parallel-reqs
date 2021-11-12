@@ -4,7 +4,7 @@ import math
 
 class Job():
 	### CLASS VARIABLES
-	in_pipe,out_pipe = NULL,NULL
+	
 
 	### INIT
 	def __init__(self, id, start_time, end_time):

@@ -23,6 +23,8 @@ import threading
 import subprocess
 from job_manager.job import Job
 from job_manager.queue import Queue
+#from job import Job
+#from queue import Queue
 
 
 
@@ -87,11 +89,27 @@ def get_queue(current_queue,args):
 
 
 def add_job(h_val,data,current_queue):
-	pass
+	job_params = data.split("\n")
+	curr_time = time.time() + offset
+	run_time = convert_to_seconds(data[4])
+	new_job = Job(h_val,curr_time,curr_time+run_time)
+	current_queue.add_jobs(new_job)
+
+
+def convert_to_seconds(time):
+	t_s = 0
+	time_data = time.split(":")
+	t_s += int(time_data[3])
+	t_s += int(time_data[2])*60
+	t_s += int(time_data[1])*3600
+	t_s += int(time_data[0])*86400
+	return t_s
 
 
 man_in = "../../communications/man_in"
 man_out = "../../communications/man_out"
+offset = 2
+
 
 if __name__ == "__main__":
 	main_loop()
