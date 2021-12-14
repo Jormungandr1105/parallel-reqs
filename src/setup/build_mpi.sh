@@ -31,7 +31,7 @@ function Create_File() {
 ################################################################################
 # MAIN
 ################################################################################
-cd ..
+cd ../..
 # Make the folders, if they dont exist
 Create_Folder $install_folder
 Create_Folder temp
@@ -64,6 +64,15 @@ cd $pathname
 if [ -d $install_folder/bin ]
 then
 	echo "MPICH INSTALLED SUCCESSFULLY"
+	cur_path="$(echo $PATH)"
+	should_have="$pathname/$install_folder/bin"
+	if [[ "$cur_path" =~ "$should_have" ]]
+	then
+		echo "MPICH ON PATH"
+	else
+		echo -e "# Use MPICH for Parallel Programming\nexport PATH=$pathname/$install_folder/bin:\$PATH" >> $HOME/.bashrc
+		echo "MPICH ADDED TO PATH"
+	fi
 else
 	echo "MPICH INSTALLATION FAILED"
 fi

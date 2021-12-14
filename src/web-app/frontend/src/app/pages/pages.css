@@ -1,0 +1,19 @@
+.window {
+	position: absolute;
+	z-index: -1;
+	top: 0px;
+	width: 86vw;
+	right: 0;
+	padding: 0 calc(var(--nav-size)/2);
+	background-color: #252323;
+	height: 100vh;
+	--text-color: #13e400;
+}
+
+p {
+	color: var(--text-color);
+}
+
+div {
+	color: var(--text-color);
+}

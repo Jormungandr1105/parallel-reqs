@@ -1,7 +1,0 @@
-node00:8
-node01:8
-node02:8
-node03:8
-node04:8
-node05:8
-node06:8

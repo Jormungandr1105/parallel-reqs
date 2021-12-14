@@ -4,7 +4,7 @@
 export mpich_version="3.4.2" 
 
 # current path to project
-export pathname=$(cd .. && pwd) 
+export pathname=$(cd ../.. && pwd) 
 
 #Download folder name
 export lib_name="mpich-$mpich_version"

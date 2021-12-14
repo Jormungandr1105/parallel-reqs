@@ -1,0 +1,5 @@
+#!/bin/bash
+
+source env.sh
+
+cd $REQS_LOC/bin && python3 $HARDWARE/hardware_controller.py

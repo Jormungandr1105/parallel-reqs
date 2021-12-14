@@ -1,0 +1,4 @@
+#!/bin/bash
+source env.sh
+echo -e "POWER:1111" > $COMMANDS/1.cmnd
+echo -e "COLOR:0" > $COMMANDS/2.cmnd

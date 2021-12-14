@@ -1,16 +1,26 @@
-# Ignore all
-*
+# build help
+temp
 
-# Except Necessary
-!*.sh
-!*.cpp
-!*.h
-!*.py
-!*.ino
-!.gitignore
+# Code
+.vscode
+.fuse*
 
-# Also Folders
-!src
+# Unimportant
+__pycache__
 
-# And an empty hosts file
-!hosts.txt
+# Created when run
+mpich-download
+mpich-install
+
+# Web Stuff
+src/web-app/frontend/node_modules
+src/web-app/backend/node_modules
+
+# Logs
+*.log
+
+# Commands
+*.cmnd
+
+# Environment variables
+*/env.sh

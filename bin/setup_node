@@ -1,0 +1,6 @@
+#!/bin/bash
+## SETS UP PARALLEL PROCESSING ON A SINGLE NODE
+source env.sh
+
+cd $REQS_LOC/src/setup
+./build_mpi.sh
