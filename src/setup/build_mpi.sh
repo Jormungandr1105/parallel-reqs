@@ -10,6 +10,8 @@ source ./env.sh
 #
 # Check if folder exists, if it doesn't, make it
 function Create_Folder() {
+	# INPUTS: foldername
+	# OUTPUTS: 
 	foldername=$1
 	if [ ! -d $foldername ]
 	then
@@ -25,6 +27,17 @@ function Create_File() {
 	if [ ! -f $filename ]
 	then
 		return $(touch $filename)
+	fi
+	return 0
+}
+# Check if folder exists, if it does, delete it
+function Delete_Folder() {
+	# INPUTS: foldername
+	# OUTPUTS: 
+	foldername=$1
+	if [ -d $foldername ]
+	then
+		return $(rm -r $foldername)
 	fi
 	return 0
 }
@@ -76,3 +89,6 @@ then
 else
 	echo "MPICH INSTALLATION FAILED"
 fi
+
+# Cleanup
+Delete_Folder temp

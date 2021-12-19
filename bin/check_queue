@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Nothing to see here, just testing
+
+python3 ../src/job_manager/api.py

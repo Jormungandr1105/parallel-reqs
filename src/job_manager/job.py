@@ -4,15 +4,15 @@ import math
 
 class Job():
 	### CLASS VARIABLES
-	
+
 
 	### INIT
-	def __init__(self, id, start_time, end_time):
-		# id is an integer assigned to the job
+	def __init__(self, id, start_time, thread):
+		# id is an hex code assigned to the job
 		# start_time is a float of time in seconds since the Epoch
 		self.id = id
 		self.start_time = start_time
-		self.end_time = end_time
+		self.thread = thread
 
 	### GETTERS
 	def get_id(self):

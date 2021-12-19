@@ -23,4 +23,5 @@ src/web-app/backend/node_modules
 *.cmnd
 
 # Environment variables
-*/env.sh
+bin/env.sh
+.env
