@@ -44,21 +44,27 @@ function Delete_Folder() {
 ################################################################################
 # MAIN
 ################################################################################
+# Check for Dependencies
+command -v pax >/dev/null 2>&1 || { echo >&2 "Pax is required to untar the downloaded file, and it has not been found on this system. If you plan to run jobs on this machine, please install pax prior to running this command again. Aborting."; exit 1;}
+# End Dependency Check
+echo "ALL DEPENDENCIES MET"
+echo "COMMENCING MPICH v$mpich_version INSTALL"
+sleep 2
 cd ../..
 # Make the folders, if they dont exist
 Create_Folder $install_folder
 Create_Folder temp
 Create_Folder mpich-download
 if [ ! -d $install_folder/bin ] # If MPICH not installed and built
-then
+	then
 	# Download and install MPICH Library
 	cd mpich-download
 	if [ ! -f $lib_name.tar.gz ]
-	then
+		then
 		wget http://www.mpich.org/static/downloads/$mpich_version/$lib_name.tar.gz
 	fi
 	if [ ! -d $lib_name ]
-	then
+		then
 		#tar -xpzf $lib_name.tar.gz # overwrites time accessed
 		#file-roller $lib_name.tar.gz --extract-here # works only if gnome desktop
 		pax -f $lib_name.tar.gz -z -r # this seems to work across systems
@@ -89,6 +95,13 @@ then
 else
 	echo "MPICH INSTALLATION FAILED"
 fi
+
+echo -e "DOWNLOADING DISCORD FOR PYTHON"
+pip3 install -U discord.py > /dev/null
+echo -e "DONE"
+echo -e "DOWNLOADING DOTENV FOR PYTHON"
+pip3 install -U python-dotenv > /dev/null
+echo -e "DONE"
 
 # Cleanup
 Delete_Folder temp

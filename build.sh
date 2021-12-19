@@ -10,17 +10,18 @@ if [[ "$SYSTEMBOOT" =~ "$EXPECTED_RESP" ]]
 	then
 	# SEND ALREADY ON PATH MESSAGE
 cat << EOT
-Parallel-Reqs/bin already on PATH:
-	If you have moved the folder, please remove */parallel-reqs/bin
+$PWD/bin already on PATH:
+	If you have moved the folder, please remove
+	$PWD/bin
 	from your .bashrc file
 EOT
 
 else
 	# ADD TO PATH
-	echo -e "# Adding Parallel_Reqs/bin to the path\nexport PATH=\$PATH:$PWD/bin" >> ~/.bashrc
+	echo -e "# Adding $PWD/bin to the path\nexport PATH=\$PATH:$PWD/bin" >> ~/.bashrc
 	# RELAY MESSAGE
 cat << EOT
-Added Parallel-Reqs/bin to PATH in .bashrc
+Added $PWD/bin to PATH in .bashrc
 	Run . ~/.bashrc or reopen the terminal to load them into your PATH
 EOT
 
@@ -29,5 +30,17 @@ fi
 if [ ! -p communication/man_in ]
 	then
 	mkfifo communication/man_in
-	echo -e "CREATED IN_PIPE\n"
+	echo -e "CREATED IN_PIPE"
+fi
+
+if [ ! -f machinefile ]
+	then
+	touch machinefile
+	echo -e "CREATED MACHINEFILE"
+fi
+
+if [ ! -f src/discord_bot/.env ]
+	then
+	echo -e "DISCORD_TOKEN=\"\"" > src/discord_bot/.env
+	echo -e "CREATED DISCORD ENV FILE"
 fi
