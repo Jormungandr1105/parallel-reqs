@@ -1,9 +1,0 @@
-#!/bin/bash
-# Launches the Cluster's monitoring site
-source env.sh
-
-cd $REQS_LOC/src/web-app
-
-cd backend && node index.js > backend.log &
-cd frontend && npm start > frontend.log &
-wait

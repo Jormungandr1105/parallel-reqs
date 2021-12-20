@@ -21,9 +21,9 @@ import time
 import math
 import threading
 import subprocess
-from job import Job
-from queue import Queue
-from management import Management
+from job_manager.job import Job
+from job_manager.queue import Queue
+from job_manager.management import Management
 
 
 def boot_system():
@@ -65,7 +65,7 @@ def check_command(h_val, command, args, data, current_queue, past_queue):
 		data = get_queue(current_queue,args)
 		send(h_val, data)
 	elif command == "add_job":
-		data = add_job()
+		data = add_job(h_val,args,current_queue)
 	elif command == "cluster_info":
 		pass
 	elif command == "kill_manager":
@@ -89,19 +89,23 @@ def get_status(h_val, args, data):
 
 
 def get_queue(current_queue,args):
-	data = "CURRENT_QUEUE\n=============\n"
+	data = "====================\n| {0:16} |\n{1}\n".format("CURRENT_QUEUE","="*80)
+	data += "| {0:16} | {1:12} | {2} |\n".format("JOB_NAME","ELAPSED_TIME","% ")
+	data += "="*80+"\n"
 	jobs = current_queue.get_jobs()
 	for job in jobs:
 		data += "{}\n".format(job.get_data(args[0]))
+	data += "="*80+"\n"
 	return data
 
 
 def add_job(h_val,data,current_queue):
-	job_params = data.split("\n")
+	# data = [JOB_NAME,JOB_FILE,MAX_TIME,HOSTFILE,NUM_NODES]
 	curr_time = time.time()
-	run_time = convert_to_seconds(data[4])
-	new_job = Job(h_val,curr_time,curr_time+run_time)
-	current_queue.add_jobs(new_job)
+	# Do some check here to get most efficient use of nodes
+	run_time = convert_to_seconds(data[2])
+	new_job = Job(h_val,curr_time,curr_time+run_time,None,data)
+	current_queue.add_job(new_job)
 
 
 def convert_to_seconds(time):

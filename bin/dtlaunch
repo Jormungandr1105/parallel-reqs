@@ -1,0 +1,49 @@
+#!/bin/bash
+
+source env.sh
+
+case $1 in
+	all)
+		# Launch manager, bot, and website
+		cd $REQS_LOC/src && python3 -m job_manager &
+		cd $REQS_LOC/src && python3 -m discord_bot &
+		cd $REQS_LOC/src/web-app
+		cd backend && node index.js > backend.log &
+		cd frontend && npm start > frontend.log &
+		wait
+		;;
+
+	discord)
+		# Launches discord bot
+		cd $REQS_LOC/src && python3 -m discord_bot &
+		wait
+		;;
+	
+	manager)
+		# Launches job manager and hardware manager
+		cd $REQS_LOC/src && python3 -m job_manager &
+		wait
+		;;
+
+	website)
+		# Launches website
+		cd $REQS_LOC/src/web-app
+		cd backend && node index.js > backend.log &
+		cd frontend && npm start > frontend.log &
+		wait
+		;;
+	
+	*)
+		# Someone needs help
+cat << EOT
+This script serves as a launcher for the cluster
+Possible options include:
+	- all -----> Launches the manager, discord bot, and monitoring site
+	- manager -> Launches the manager
+	- discord -> Launches the discord bot
+	- website -> Launches the monitoring site
+
+Please try again with one of the previous commands.
+EOT
+;;
+esac

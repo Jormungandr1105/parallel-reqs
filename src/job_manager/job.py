@@ -7,26 +7,34 @@ class Job():
 
 
 	### INIT
-	def __init__(self, id, start_time, thread):
+	def __init__(self, id, start_time, end_time, thread, data):
 		# id is an hex code assigned to the job
 		# start_time is a float of time in seconds since the Epoch
 		self.id = id
 		self.start_time = start_time
+		self.end_time = end_time
 		self.thread = thread
+		self.name = data[0]
+		self.file = data[1]
+		self.hostfile = data[3]
+		self.num_nodes = data[4]
+		self.percent_complete = 0
 
 	### GETTERS
 	def get_id(self):
 		return self.id
 		
 	def get_data(self, level):
-		start_date = time.c_time(self.start_time)
+		start_date = time.ctime(self.start_time)
 		t_elapsed = time.time() - self.start_time
 		days = math.floor(t_elapsed/86400)
 		hours = math.floor((t_elapsed-days*86400)/3600)
 		minutes = math.floor((t_elapsed-days*86400-hours*3600)/60)
-		seconds = t_elapsed-days*86400-hours*3600-minutes*60
+		seconds = math.floor(t_elapsed-days*86400-hours*3600-minutes*60)
 		if level == "basic":
-			string = "{0}:{1}:{2}:{3}".format(days,hours,minutes,seconds)
+			string = "| {:16s} |".format(self.name)
+			string += " {0:03d}:{1:02d}:{2:02d}:{3:02d} |".format(days,hours,minutes,seconds)
+			string += " {:02d} |".format(self.percent_complete)
 			return string
 		elif level == "deep":
 			pass

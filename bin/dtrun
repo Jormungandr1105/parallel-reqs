@@ -1,27 +1,6 @@
 #!/bin/bash
-################################################################################
-# Main Interaction with Deep_Thought
-################################################################################
-## Options:
-##### check_queue
-##### system_check
-##### kill_system
-##### help
-##### 
-################################################################################
-COMMAND=$1
-ARG=$2
 
-case $COMMAND in
-	addjob)
-		echo "addjob"
-		;;
-	
-	queue)
-		echo -e "$(python3 ../src/job_manager/api.py show_queue)"
-		;;
-	
-	*)
-		echo "Unknown"
-		;;
-esac
+source env.sh
+FILE=$1
+
+echo -e "$(python3 $REQS_LOC/src/job_manager/api.py add_job $FILE)"

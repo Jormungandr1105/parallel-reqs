@@ -1,6 +1,7 @@
 import os
 import sys
 import secrets
+import threading
 
 class API():
 	def __init__(self):
@@ -41,21 +42,41 @@ class API():
 			reply = "No Response\n"
 		return reply
 
-	def add_job(self, job_info):
-		data = ["add_job",job_info[0],job_info[1]]
+	def add_job(self, filename):
+		data = parse_job_data(filename)
+		if type(data) is str:
+			return data
+		all_data = ["add_job",data,"\n"]
+		hash = self.send_request(all_data)
+		reply = self.await_reply(hash)
+		return reply
+
+	def show_queue(self,level):
+		data = ["show_queue",[level],"\n"]
 		hash = self.send_request(data)
 		reply = self.await_reply(hash)
 		return reply
 
-	def show_queue(self):
-		data = ["show_queue","\n","\n"]
-		hash = self.send_request(data)
-		reply = self.await_reply(hash)
-		return reply
 
-
-def parse_data(data):
-	return data
+def parse_job_data(file):
+	arg_names = ["JOB_NAME","JOB_FILE","MAX_TIME","HOST_LIST","NUM_NODES"]
+	arg_vals = ["","","","",""]
+	f = open(file)
+	text = f.read()
+	f.close()
+	data = text.split("\n")
+	for arg in data:
+		if arg[0] != '#':
+			arg_name = arg.split("=")[0].strip(" ")
+			arg_val = arg.split("=")[1].strip(" ")
+			for x in range(len(arg_names)):
+				if arg_name == arg_names[x]:
+					arg_vals[x] = arg_val
+					break
+	for x in range(len(arg_vals)):
+		if arg_vals[x] == "":
+			return "ERROR: EMPTY VALUE IN ARGUMENT {}".format(arg_names[x])
+	return arg_vals
 
 
 if __name__ == "__main__":
@@ -64,7 +85,7 @@ if __name__ == "__main__":
 	if len(sys.argv) > 2:
 		data = sys.argv[2]
 	if command == "show_queue":
-		print(api.show_queue())
+		print(api.show_queue(data))
 	elif command == "add_job":
-		print(api.add_job(parse_data(data)))
+		print(api.add_job(data))
 
