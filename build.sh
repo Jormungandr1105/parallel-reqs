@@ -47,6 +47,6 @@ fi
 
 echo -e "DOWNLOADING JS FILES"
 cd src/web-app/backend && npm install
-cd src/web-app/frontend && npm install
+cd ../frontend && npm install
 
 echo -e "BUILD COMPLETE"
