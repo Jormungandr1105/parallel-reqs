@@ -66,6 +66,7 @@ def check_command(h_val, command, args, data, current_queue, past_queue):
 		send(h_val, data)
 	elif command == "add_job":
 		data = add_job(h_val,args,current_queue)
+		send(h_val, data)
 	elif command == "cluster_info":
 		pass
 	elif command == "kill_manager":
@@ -106,6 +107,8 @@ def add_job(h_val,data,current_queue):
 	run_time = convert_to_seconds(data[2])
 	new_job = Job(h_val,curr_time,curr_time+run_time,None,data)
 	current_queue.add_job(new_job)
+	# Perform some check to make sure the job got going and is functional
+	return "Job Added"
 
 
 def convert_to_seconds(time):

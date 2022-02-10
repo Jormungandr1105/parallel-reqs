@@ -45,6 +45,9 @@ if [ ! -f src/discord_bot/.env ]
 	echo -e "CREATED DISCORD ENV FILE"
 fi
 
+echo -e "INSTALLING REQUIRED PYTHON LIBRARIES"
+pip3 install -r requirements.txt
+
 echo -e "DOWNLOADING JS FILES"
 cd src/web-app/backend && npm install
 cd ../frontend && npm install

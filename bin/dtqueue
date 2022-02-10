@@ -4,4 +4,4 @@ source env.sh
 
 LEVEL=$1
 
- echo -e "$(python3 $REQS_LOC/src/job_manager/api.py show_queue $LEVEL)"
+echo -e "$(python3 $REQS_LOC/src/job_manager/api.py show_queue $LEVEL)"

@@ -66,7 +66,7 @@ def parse_job_data(file):
 	f.close()
 	data = text.split("\n")
 	for arg in data:
-		if arg[0] != '#':
+		if len(arg)!=0 and arg[0] != '#':
 			arg_name = arg.split("=")[0].strip(" ")
 			arg_val = arg.split("=")[1].strip(" ")
 			for x in range(len(arg_names)):
@@ -82,10 +82,10 @@ def parse_job_data(file):
 if __name__ == "__main__":
 	api = API()
 	command = sys.argv[1]
+	data = "basic"
 	if len(sys.argv) > 2:
 		data = sys.argv[2]
 	if command == "show_queue":
 		print(api.show_queue(data))
 	elif command == "add_job":
 		print(api.add_job(data))
-
