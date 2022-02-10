@@ -1,0 +1,6 @@
+#!/bin/bash
+
+source env.sh
+FILE=$1
+
+echo -e "$(python3 $REQS_LOC/src/job_manager/api.py add_job $FILE)"

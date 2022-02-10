@@ -1,5 +1,5 @@
 # Struct to hold Jobs for the Manager
-from job import Job
+from job_manager.job import Job
 
 class Queue():
 	def __init__(self):
