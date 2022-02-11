@@ -42,8 +42,8 @@ class API():
 			reply = "No Response\n"
 		return reply
 
-	def add_job(self, filename):
-		data = parse_job_data(filename)
+	def add_job(self, path, filename):
+		data = parse_job_data(path,filename)
 		if type(data) is str:
 			return data
 		all_data = ["add_job",data,"\n"]
@@ -58,9 +58,9 @@ class API():
 		return reply
 
 
-def parse_job_data(file):
-	arg_names = ["JOB_NAME","JOB_FILE","MAX_TIME","HOST_LIST","NUM_NODES"]
-	arg_vals = ["","","","",""]
+def parse_job_data(path,file):
+	arg_names = ["PATH","JOB_NAME","JOB_FILE","MAX_TIME","HOST_LIST","NUM_NODES"]
+	arg_vals = [path,"","","","",""]
 	f = open(file)
 	text = f.read()
 	f.close()
@@ -82,10 +82,14 @@ def parse_job_data(file):
 if __name__ == "__main__":
 	api = API()
 	command = sys.argv[1]
-	data = "basic"
-	if len(sys.argv) > 2:
-		data = sys.argv[2]
 	if command == "show_queue":
+		data = "basic"
+		if len(sys.argv) > 2:
+			data = sys.argv[2]
 		print(api.show_queue(data))
 	elif command == "add_job":
-		print(api.add_job(data))
+		assert(len(sys.argv)>3)
+		path = sys.argv[2]
+		file = sys.argv[3]
+		#print(path,file)
+		print(api.add_job(path,file))

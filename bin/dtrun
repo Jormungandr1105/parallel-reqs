@@ -2,5 +2,6 @@
 
 source env.sh
 FILE=$1
+CWD="$(pwd)"
 
-echo -e "$(python3 $REQS_LOC/src/job_manager/api.py add_job $FILE)"
+echo -e "$(python3 $REQS_LOC/src/job_manager/api.py add_job $CWD $FILE)"

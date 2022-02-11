@@ -36,9 +36,28 @@ def boot_system():
 def main_loop():
 	current_queue = Queue()
 	past_queue = Queue()
+
+	q_tracker = threading.Thread(target=check_queue,args=(current_queue,past_queue))
+	q_tracker.start()
 	
 	while keep_alive:
 		check_pipe(current_queue, past_queue) # Check for incoming
+		#check_queue(current_queue, past_queue)
+
+
+def check_queue(queue,past_queue):
+	while keep_alive:
+		curr_time = time.time()
+		for job in queue.jobs:
+			if job.finished == True:
+				past_queue.add_job(job)
+				queue.rm_job(job.id)
+			elif curr_time > job.end_time:
+				print("TERMINATED EARLY")
+				job.kill()
+				past_queue.add_job(job)
+				queue.rm_job(job.id)
+		time.sleep(1)
 
 
 def check_pipe(current_queue, past_queue):
@@ -72,6 +91,7 @@ def check_command(h_val, command, args, data, current_queue, past_queue):
 	elif command == "kill_manager":
 		keep_alive = False
 		for process in current_queue:
+			process.kill()
 			process.thread.join()
 		exit(0)
 	else:
@@ -101,11 +121,14 @@ def get_queue(current_queue,args):
 
 
 def add_job(h_val,data,current_queue):
-	# data = [JOB_NAME,JOB_FILE,MAX_TIME,HOSTFILE,NUM_NODES]
+	# data = [PATH,JOB_NAME,JOB_FILE,MAX_TIME,HOSTFILE,NUM_NODES]
 	curr_time = time.time()
 	# Do some check here to get most efficient use of nodes
-	run_time = convert_to_seconds(data[2])
-	new_job = Job(h_val,curr_time,curr_time+run_time,None,data)
+	run_time = convert_to_seconds(data[3])
+	new_job = Job(h_val,curr_time,curr_time+run_time,data)
+	new_thread = threading.Thread(target=new_job.run)
+	new_job.thread = new_thread
+	new_thread.start()
 	current_queue.add_job(new_job)
 	# Perform some check to make sure the job got going and is functional
 	return "Job Added"

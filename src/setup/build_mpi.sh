@@ -83,7 +83,7 @@ cd $pathname
 if [ -d $install_folder/bin ]
 then
 	echo "MPICH INSTALLED SUCCESSFULLY"
-	cur_path="$(echo $PATH)"
+	cur_path="$(cat $HOME/.bashrc)" # Modded this to just check the .bashrc file
 	should_have="$pathname/$install_folder/bin"
 	if [[ "$cur_path" =~ "$should_have" ]]
 	then
@@ -96,12 +96,9 @@ else
 	echo "MPICH INSTALLATION FAILED"
 fi
 
-echo -e "DOWNLOADING DISCORD FOR PYTHON"
-pip3 install -U discord.py > /dev/null
-echo -e "DONE"
-echo -e "DOWNLOADING DOTENV FOR PYTHON"
-pip3 install -U python-dotenv > /dev/null
-echo -e "DONE"
+echo "DOWNLOADING PYTHON REQUIREMENTS"
+pip3 install -r $pathname/requirements.txt > /dev/null
+echo "DONE"
 
 # Cleanup
 Delete_Folder temp
