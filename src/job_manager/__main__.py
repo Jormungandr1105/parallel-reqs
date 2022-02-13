@@ -21,6 +21,7 @@ import time
 import math
 import threading
 import subprocess
+import atexit
 from job_manager.job import Job
 from job_manager.queue import Queue
 from job_manager.management import Management
@@ -42,7 +43,6 @@ def main_loop():
 	
 	while keep_alive:
 		check_pipe(current_queue, past_queue) # Check for incoming
-		#check_queue(current_queue, past_queue)
 
 
 def check_queue(queue,past_queue):
@@ -89,10 +89,11 @@ def check_command(h_val, command, args, data, current_queue, past_queue):
 	elif command == "cluster_info":
 		pass
 	elif command == "kill_manager":
-		keep_alive = False
+		shutdown()
 		for process in current_queue:
 			process.kill()
 			process.thread.join()
+		time.sleep(5) # Allow other processes to finish
 		exit(0)
 	else:
 		pass
@@ -142,6 +143,14 @@ def convert_to_seconds(time):
 	t_s += int(time_data[1])*3600
 	t_s += int(time_data[0])*86400
 	return t_s
+
+
+def shutdown():
+	global keep_alive
+	keep_alive = False
+
+
+atexit.register(shutdown)
 
 
 # GLOBAL VARS & CONSTS

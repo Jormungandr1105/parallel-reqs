@@ -25,3 +25,7 @@ src/web-app/backend/node_modules
 # Environment variables
 bin/env.sh
 .env
+
+# Cpp files
+*.o
+manager

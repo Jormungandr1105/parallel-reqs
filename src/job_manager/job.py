@@ -4,6 +4,9 @@ import time
 import math
 import threading
 import subprocess
+import sys
+
+
 
 class Job():
 	### CLASS VARIABLES
@@ -25,6 +28,7 @@ class Job():
 		self.percent_complete = 0
 		self.finished = False
 		self.process = None
+		self.output = []
 
 	### GETTERS
 	def get_id(self):
@@ -63,33 +67,74 @@ class Job():
 	### RUN
 	def run(self):
 		exec_file = os.path.join(self.path,self.file)
-		execute = "mpiexec -n {0} --hostfile {1} ".format(self.num_nodes, os.path.join(self.path,self.hostfile))
+		execute = "mpiexec%-n%{0}%--hostfile%{1}%".format(self.num_nodes, os.path.join(self.path,self.hostfile))
 		try:
 			ext_begin = exec_file.rfind(".")
 			if exec_file[ext_begin:] == ".py":
-				execute += "python3 -m mpi4py {0}".format(exec_file)
+				execute += "python3%-m%mpi4py%{0}".format(exec_file)
 			else:
 				execute += "{0}".format(exec_file)
 		except ValueError:
 			execute += "{0}".format(exec_file)
 		finally:
-			args = execute.split(" ")
+			print(os.getcwd())
+			#execute += "%>%../pipe"
+			args = execute.split("%")
 			#print(args)
-			with subprocess.Popen(args, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as job:
-				self.process = job
-				for line in job.stdout:
-					print(line)
-
-		if job.returncode == 0:
+			self.process = subprocess.Popen(args,bufsize=1,universal_newlines=True,stdout=subprocess.PIPE)
+			#output_proc = threading.Thread(target=self.collect_output)
+			#output_proc.start()
+			'''
+			while self.process.poll() is None and len(self.output) != 0:
+				if len(self.output) != 0:
+					out = self.output.pop(0)
+					if out[0] == "%":
+						self.percent_complete = int(out[1:])
+					else:
+						print(out)
+					time.sleep(1)
+					print("Loop")
+			print("END LOOP")
+			'''
+			'''
+			while True:
+				output = self.process.stdout.readline()
+				if self.process.poll() is not None:
+					break
+				if output:
+					print(output,end="")
+			'''
+			while self.process.poll() is None:
+				out = self.process.stdout.read(1)
+				if out == "":
+					break
+				else:
+					sys.stdout.write(out)
+					sys.stdout.flush()
+			self.process.wait()
+		if self.process.returncode == 0:
 			print("PROCESS COMPLETED SUCCESSFULLY")
 			self.finished=True
-		elif job.returncode == 1:
+		elif self.process.returncode == 1:
 			print("SYSTEM ENCOUNTERED AN ERROR")
 		return
 
+	def collect_output(self):
+		print(os.getcwd())
+		while self.process.poll() is None:
+			print("Entered loop")
+			in_pipe = os.open("../pipe", os.O_RDONLY)
+			in_pipe = os.fdopen(in_pipe)
+			text = in_pipe.read()
+			#if text[0] == "%":
+				#self.percent_complete = int(text[1:])
+			#else:
+			print("Received from PIPE: {}".format(text))
+
 	def kill(self):
 		if not self.finished:
-			self.process.kill()
+			if self.process.poll() is not None:
+				self.process.kill()
 			self.finished=True
 
 

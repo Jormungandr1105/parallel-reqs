@@ -46,10 +46,13 @@ if [ ! -f src/discord_bot/.env ]
 fi
 
 echo -e "INSTALLING REQUIRED PYTHON LIBRARIES"
-pip3 install -r requirements.txt
+pip3 install -r requirements.txt > /dev/null
+
+echo -e "BUILDING JOB MANAGER"
+make
 
 echo -e "DOWNLOADING JS FILES"
-cd src/web-app/backend && npm install
-cd ../frontend && npm install
+cd src/web-app/backend && npm install > /dev/null
+cd ../frontend && npm install > /dev/null
 
 echo -e "BUILD COMPLETE"
