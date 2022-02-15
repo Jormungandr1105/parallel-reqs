@@ -5,7 +5,7 @@ import threading
 
 class API():
 	def __init__(self):
-		self.path = os.path.dirname(__file__)+"/../../communication/"
+		self.path = os.path.dirname(__file__)+"/../../communication"
 
 	def generate_hash(self):
 		return secrets.token_hex(4)
@@ -13,9 +13,9 @@ class API():
 	def send_request(self, data):
 		while True: # Setting Up For Return Fifo
 			hash = self.generate_hash()
-			if not (os.path.isfile(self.path+str(hash))):
+			if not (os.path.isfile(os.path.join(self.path,str(hash)))):
 				break
-		os.mkfifo(self.path+str(hash)) # Reply fifo taken care of
+		os.mkfifo(os.path.join(self.path,str(hash))) # Reply fifo taken care of
 		# Actually make request here
 		spacer = "#"*80+"\n"
 		request = "{0}\n{1}\n".format(str(hash),data[0])
@@ -27,17 +27,17 @@ class API():
 			request += data_line + "\n"
 		request += spacer
 		#print(request)
-		out_pipe = os.open(self.path+"man_in", os.O_WRONLY)
+		out_pipe = os.open(os.path.join(self.path,"man_in"), os.O_WRONLY)
 		out_pipe = os.fdopen(out_pipe, "w")
 		out_pipe.write(request)
 		return hash
 
 	def await_reply(self, hash):
-		in_pipe = os.open(self.path+str(hash), os.O_RDONLY)
+		in_pipe = os.open(os.path.join(self.path,str(hash)), os.O_RDONLY)
 		in_pipe = os.fdopen(in_pipe)
 		reply = in_pipe.read()
 		try:
-			os.remove(self.path+str(hash)) # Clean Up Mess
+			os.remove(os.path.join(self.path,str(hash))) # Clean Up Mess
 		except FileNotFoundError:
 			reply = "No Response\n"
 		return reply
@@ -46,13 +46,13 @@ class API():
 		data = parse_job_data(path,filename)
 		if type(data) is str:
 			return data
-		all_data = ["add_job",data,"\n"]
+		all_data = ["add_job",data,[""]]
 		hash = self.send_request(all_data)
 		reply = self.await_reply(hash)
 		return reply
 
 	def show_queue(self,level):
-		data = ["show_queue",[level],"\n"]
+		data = ["show_queue",[level],[""]]
 		hash = self.send_request(data)
 		reply = self.await_reply(hash)
 		return reply
@@ -89,7 +89,7 @@ if __name__ == "__main__":
 		print(api.show_queue(data))
 	elif command == "add_job":
 		assert(len(sys.argv)>3)
-		path = sys.argv[2]
+		path = sys.argv[2] + "/"
 		file = sys.argv[3]
 		#print(path,file)
 		print(api.add_job(path,file))

@@ -4,7 +4,10 @@ PipeIO::PipeIO() {}
 
 bool PipeIO::setFileName(std::string Filename) {
 	filename = Filename;
-	return true;
+	if (std::filesystem::exists(filename)) {
+		return true;
+	}
+	return false;
 }
 
 bool PipeIO::connect(bool isWriting) {
@@ -39,4 +42,5 @@ void PipeIO::receiveTransmission(std::string &transmission) {
 
 void PipeIO::sendTransmission(std::string transmission) {
 	wf << transmission;
+	wf.close();
 }

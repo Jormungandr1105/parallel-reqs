@@ -8,6 +8,12 @@
 #include <filesystem>
 #include <sys/types.h>
 #include <sys/stat.h>
+//#include <pthread.h>
+#include <chrono>
+#include <thread>
+#include <ctime>
+#include <thread>
+#include <mutex>
 #include "PipeIO.h"
 
 

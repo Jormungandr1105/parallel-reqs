@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-std=c++1z -g
+CXXFLAGS=-std=c++1z -g -pthread
 MAIN=manager
 SRC_DIR=src/job_manager
 SRCS=$(wildcard $(SRC_DIR)/*.cpp)

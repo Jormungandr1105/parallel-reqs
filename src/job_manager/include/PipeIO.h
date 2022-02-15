@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 #include <fcntl.h>
+#include <filesystem>
 
 class PipeIO {
 private:
