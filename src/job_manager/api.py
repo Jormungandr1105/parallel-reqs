@@ -6,6 +6,7 @@ import threading
 class API():
 	def __init__(self):
 		self.path = os.path.dirname(__file__)+"/../../communication"
+		self.job_path = os.path.dirname(__file__)+"/../../jobs"
 
 	def generate_hash(self):
 		return secrets.token_hex(4)
@@ -14,7 +15,8 @@ class API():
 		while True: # Setting Up For Return Fifo
 			hash = self.generate_hash()
 			if not (os.path.isfile(os.path.join(self.path,str(hash)))):
-				break
+				if not (os.path.isfile(os.path.join(self.job_path,str(hash)))):
+					break
 		os.mkfifo(os.path.join(self.path,str(hash))) # Reply fifo taken care of
 		# Actually make request here
 		spacer = "#"*80+"\n"

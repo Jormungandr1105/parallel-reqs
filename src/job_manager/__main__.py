@@ -47,14 +47,8 @@ def main_loop():
 
 def check_queue(queue,past_queue):
 	while keep_alive:
-		curr_time = time.time()
 		for job in queue.jobs:
 			if job.finished == True:
-				past_queue.add_job(job)
-				queue.rm_job(job.id)
-			elif curr_time > job.end_time:
-				print("TERMINATED EARLY")
-				job.kill()
 				past_queue.add_job(job)
 				queue.rm_job(job.id)
 		time.sleep(1)
@@ -111,13 +105,13 @@ def get_status(h_val, args, data):
 
 
 def get_queue(current_queue,args):
-	data = "====================\n| {0:16} |\n{1}\n".format("CURRENT_QUEUE","="*80)
-	data += "| {0:16} | {1:12} | {2} |\n".format("JOB_NAME","ELAPSED_TIME","% ")
-	data += "="*80+"\n"
+	data = "_________________\n"
+	data += "|_CURRENT_QUEUE_|__________________________________________\n"
+	data += "|__HASH__|__JOB_NAME__|____TIME____|_NODES_|____FILES_____|\n"
 	jobs = current_queue.get_jobs()
 	for job in jobs:
 		data += "{}\n".format(job.get_data(args[0]))
-	data += "="*80+"\n"
+	#data += "-"*80+"\n"
 	return data
 
 
@@ -126,7 +120,7 @@ def add_job(h_val,data,current_queue):
 	curr_time = time.time()
 	# Do some check here to get most efficient use of nodes
 	run_time = convert_to_seconds(data[3])
-	new_job = Job(h_val,curr_time,curr_time+run_time,data)
+	new_job = Job(h_val,curr_time,run_time,data)
 	new_thread = threading.Thread(target=new_job.run)
 	new_job.thread = new_thread
 	new_thread.start()

@@ -33,6 +33,12 @@ if [ ! -p communication/man_in ]
 	echo -e "CREATED IN_PIPE"
 fi
 
+if [ ! -d jobs ]
+	then
+	mkdir jobs
+	echo -e "CREATED JOBS FOLDER"
+fi
+
 if [ ! -f machinefile ]
 	then
 	touch machinefile

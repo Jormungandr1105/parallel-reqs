@@ -17,7 +17,7 @@ struct Job {
 	int num_procs;
 	bool running;
 	pid_t pid;
-	int start_time;
+	std::chrono::_V2::system_clock::time_point start_time;
 	std::string exec;
 };
 
@@ -43,6 +43,8 @@ std::mutex current_queue_mutex;
 
 
 int main() {
+	std::thread timer(time_manager);
+	timer.detach();
 	pipe_manager();
 	return 0;
 }
@@ -98,6 +100,7 @@ void process_job(Message message) {
 		show_queue(message);
 	} else {
 		std::cout << "INVALID COMMAND: " << message.command << std::endl;
+		send_response(message.hash,"INVALID COMMAND");
 	}
 }
 
@@ -106,6 +109,7 @@ void add_job(Message message) {
 	int start,end;
 	std::string delim = "\n";
 	std::string data = message.data;
+	char buffer[1024];
 	curr_job.hash = message.hash;
 	// Get path
 	end = data.find(delim);
@@ -137,19 +141,51 @@ void add_job(Message message) {
 	} else {
 		curr_job.exec += " " + curr_job.path + curr_job.filename;
 	}
+	curr_job.exec += " -maxtime " + std::to_string(curr_job.max_time);
 	print_job_info(curr_job);
-	//FILE* stdout = popen("");
+	// Start the process
+	FILE* stdout = popen(curr_job.exec.c_str(),"r");
+	curr_job.start_time = std::chrono::system_clock::now();
+	if (!stdout) {
+		send_response(message.hash,"Couldn't execute job");
+		return;
+	} else {
+		send_response(message.hash,"Success");
+	}
 	current_queue_mutex.lock();
 	current_queue.emplace_back(curr_job);
+	current_queue_mutex.unlock();
+	while(fgets(buffer,sizeof(buffer),stdout)!=NULL) {
+		std::cout << buffer << " endl" << std::endl;
+	}
+	int return_code = pclose(stdout);
+	std::cout << return_code << std::endl;
+	current_queue_mutex.lock();
+	for(int i=0; i<current_queue.size(); i++) {
+		if(current_queue[i].hash == message.hash) {
+			current_queue.erase(current_queue.begin()+i);
+			break;
+		}
+	}
+	curr_job.running = false;
+	past_queue.emplace_back(curr_job);
 	current_queue_mutex.unlock();
 }
 
 void show_queue(Message message) {
 	std::string response = "";
+	Job job;
+	std::chrono::_V2::system_clock::time_point current_time;
+	current_time = std::chrono::system_clock::now();
 	if (message.data.substr(0,5) == "basic") {
 		response += "_________________\n";
 		response += "|_CURRENT_QUEUE_|________________________________________\n";
-		response += "|__JOB_NAME__|_ELAPSED_TIME_|_%_|________________________\n";
+		response += "|__HASH__|__JOB_NAME__|___TIME___|_NODES_|____FILES_____|\n";
+		current_queue_mutex.lock();
+		for(int i=0; i<current_queue.size(); i++) {
+			job = current_queue[i];
+			response += "|"+job.hash+"|"+
+		}
 	} else {
 		response += "Unidentified Keyword: " + message.data + "\n";
 	}

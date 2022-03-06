@@ -14,7 +14,6 @@ def run():
 				print("Process {0} of {1}: Online".format(i+1,size))
 			else:
 				print("Process {0} of {1}: Unresponsive".format(i+1,size))
-			print("%{}".format(int(((i+1)*100)/size)))
 			time.sleep(2)
 
 

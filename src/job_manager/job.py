@@ -7,18 +7,21 @@ import subprocess
 import sys
 
 
+file_path = os.path.abspath("{}/../../jobs/".format(os.path.dirname(__file__)))
+
+
 
 class Job():
 	### CLASS VARIABLES
 
 
 	### INIT
-	def __init__(self, id, start_time, end_time, data):
+	def __init__(self, id, start_time, max_time, data):
 		# id is an hex code assigned to the job
 		# start_time is a float of time in seconds since the Epoch
 		self.id = id
 		self.start_time = start_time
-		self.end_time = end_time
+		self.max_time = max_time
 		self.thread = None
 		self.path = data[0]
 		self.name = data[1]
@@ -29,6 +32,8 @@ class Job():
 		self.finished = False
 		self.process = None
 		self.output = []
+		self.result = None
+		self.save_file = os.path.abspath("{0}/{1}".format(file_path,id))
 
 	### GETTERS
 	def get_id(self):
@@ -42,9 +47,10 @@ class Job():
 		minutes = math.floor((t_elapsed-days*86400-hours*3600)/60)
 		seconds = math.floor(t_elapsed-days*86400-hours*3600-minutes*60)
 		if level == "basic":
-			string = "| {:16s} |".format(self.name)
-			string += " {0:03d}:{1:02d}:{2:02d}:{3:02d} |".format(days,hours,minutes,seconds)
-			string += " {:02d} |".format(self.percent_complete)
+			string = "|{:8s}|".format(self.id)
+			string += "{:12s}|".format(self.name)
+			string += "{0:03d}:{1:02d}:{2:02d}:{3:02d}|".format(days,hours,minutes,seconds)
+			string += "{:7s}|".format(self.num_nodes)
 			return string
 		elif level == "deep":
 			pass
@@ -67,7 +73,7 @@ class Job():
 	### RUN
 	def run(self):
 		exec_file = os.path.join(self.path,self.file)
-		execute = "mpiexec%-n%{0}%--hostfile%{1}%".format(self.num_nodes, os.path.join(self.path,self.hostfile))
+		execute = "mpiexec%-n%{0}%--hostfile%{1}%-genv%MPIEXEC_TIMEOUT%{2}%".format(self.num_nodes, os.path.join(self.path,self.hostfile),self.max_time)
 		try:
 			ext_begin = exec_file.rfind(".")
 			if exec_file[ext_begin:] == ".py":
@@ -78,45 +84,21 @@ class Job():
 			execute += "{0}".format(exec_file)
 		finally:
 			print(os.getcwd())
-			#execute += "%>%../pipe"
 			args = execute.split("%")
-			#print(args)
+			print(args)
 			self.process = subprocess.Popen(args,bufsize=1,universal_newlines=True,stdout=subprocess.PIPE)
-			#output_proc = threading.Thread(target=self.collect_output)
-			#output_proc.start()
-			'''
-			while self.process.poll() is None and len(self.output) != 0:
-				if len(self.output) != 0:
-					out = self.output.pop(0)
-					if out[0] == "%":
-						self.percent_complete = int(out[1:])
-					else:
-						print(out)
-					time.sleep(1)
-					print("Loop")
-			print("END LOOP")
-			'''
-			'''
+			f = open(self.save_file,"w+")
 			while True:
 				output = self.process.stdout.readline()
 				if self.process.poll() is not None:
 					break
 				if output:
-					print(output,end="")
-			'''
-			while self.process.poll() is None:
-				out = self.process.stdout.read(1)
-				if out == "":
-					break
-				else:
-					sys.stdout.write(out)
-					sys.stdout.flush()
-			self.process.wait()
-		if self.process.returncode == 0:
-			print("PROCESS COMPLETED SUCCESSFULLY")
-			self.finished=True
-		elif self.process.returncode == 1:
+					f.write(output)
+			f.close()
+		if self.process.returncode == 1:
 			print("SYSTEM ENCOUNTERED AN ERROR")
+		self.result = self.process.returncode
+		self.finished = True
 		return
 
 	def collect_output(self):
