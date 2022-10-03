@@ -1,5 +1,5 @@
 import os
-from discord.ext import commands
+import discord
 from dotenv import load_dotenv
 import subprocess
 from job_manager.api import API
@@ -14,22 +14,38 @@ if DISCORD_TOKEN == "":
 
 Api = API()
 
-bot = commands.Bot(command_prefix='dt')
+intents = discord.Intents.default()
+intents.message_content = True
+
+bot = discord.Client(intents=intents)
 
 @bot.event
 async def on_ready():
 	print("{0} spinning up".format(bot.user.name))
 
-@bot.command(name="queue")
-async def dtqueue(ctx,*,arg=None):
-	if arg == None:
-		arg = "basic"
-	response = Api.show_queue(arg)
+@bot.event
+async def on_message(message):
+	if message.author == bot.user:
+		return
+	if message.content.startswith('dt'):
+		msg = message.content[2:]
+		args=msg.split(" ")[1:]
+		print(args)
+		if msg[:5] == "queue":
+			await dtqueue(args,message.channel)
+		elif msg[:3] == "run":
+			await dtrun(args,message.channel)
+
+async def dtqueue(args,ctx):
+	if args == []:
+		args = "basic"
+	else:
+		args = args[0]
+	response = Api.show_queue(args)
 	response = """```bash\n{0}```""".format(response)
 	await ctx.send(response)
 
-@bot.command(name="run")
-async def run(ctx,*,arg=None):
+async def dtrun(args,ctx):
 	response = "This command is currently under construction\nTry again later, or get off your ass and finish it."
 	await ctx.send(response)
 
